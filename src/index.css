@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --edm-purple: #9b4dff;
+  --neon-green: #ccff33;
+  --dark-bg: #1a1a2e;
+  --neon-yellow: #f7ff00;
+}
+
+body {
+  @apply bg-[color:var(--dark-bg)] text-[color:var(--neon-green)] font-sans min-h-screen p-8;
+}
