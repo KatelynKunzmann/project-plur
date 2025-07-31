@@ -24,7 +24,7 @@ useEffect(() => {
       localStorage.setItem("plur-username", username);
       setIsLocked(true);
     }
-    addPost({ username, content: input });
+    addPost({ content: input });
     setInput("");
   };
 

@@ -1,43 +1,58 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import PostForm from "./components/PostForm";
 import Post from "./components/Post";
+import { supabase } from "./supabase";
+
+const storedUsername = localStorage.getItem("plur-username") || "Anonymous";
 
 export default function App() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-  const fetchPosts = async () => {
-    try {
-      const res = await fetch('/api/posts');
-      const data = await res.json();
-      setPosts(data);
-    } catch (err) {
-      console.error('Failed to fetch posts:', err);
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching posts:", error);
+      } else {
+        // Normalize data shape to what our components expect
+        const formatted = data.map((post) => ({
+          id: post.id,
+          username: post.author,
+          content: post.content,
+          createdAt: post.created_at,
+        }));
+        setPosts(formatted);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+  
+  const addPost = async ({ content }) => {
+    const username = localStorage.getItem("plur-username") || "Anonymous";
+
+    const { data, error } = await supabase
+      .from("posts")
+      .insert([{ author: username, content }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding post:", error);
+    } else {
+      const newPost = {
+        id: data.id,
+        username: data.author,
+        content: data.content,
+        createdAt: data.created_at,
+      };
+      setPosts((prev) => [newPost, ...prev]);
     }
   };
-
-  fetchPosts();
-}, []);
-
-const addPost = async ({ username, content }) => {
-  try {
-    const res = await fetch('/api/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ author: username, content }),
-    });
-
-    const newPost = await res.json();
-    setPosts((prev) => [{
-      ...newPost,
-      createdAt: newPost.created_at,
-      username: newPost.author
-    }, ...prev]);
-
-  } catch (err) {
-    console.error('Failed to add post:', err);
-  }
-};
 
   return (
     <div className="min-h-screen bg-darkBg font-sans p-8 max-w-3xl mx-auto">
