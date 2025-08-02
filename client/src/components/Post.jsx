@@ -108,14 +108,17 @@ const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
                   key={comment.id}
                   className="bg-[#38385a] p-2 rounded text-sm border-l-4 border-neonYellow"
                 >
-                  <div className="flex justify-between">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-1">
                     <p className="font-semibold text-neonYellow">
                       {comment.author || "Anonymous"}
                     </p>
-                    <p className="text-xs text-gray-400">{relativeTime}</p>
+                    <span className="text-xs text-gray-400 sm:text-right sm:ml-2">
+                      {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                    </span>
                   </div>
                   <p>{comment.content}</p>
                 </div>
+
               );
             })}
             {comments.length > 5 && (

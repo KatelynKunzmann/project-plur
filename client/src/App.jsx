@@ -83,12 +83,18 @@ const addComment = async (postId, content) => {
   }
 };
 
-
   return (
-    <div className="min-h-screen bg-darkBg font-sans p-8 max-w-3xl mx-auto">
-      <h1 className="text-5xl font-extrabold text-edmPurple drop-shadow-lg text-center">
-        Welcome to Project PLUR
-      </h1>
+    <div className="min-h-screen bg-darkBg font-sans px-4 max-w-4xl mx-auto">
+      <div className="flex flex-col items-center text-center space-y-2 mb-6">
+        <div className="flex items-center gap-3">
+          <span className="text-4xl sm:text-5xl text-edmPurple drop-shadow-lg">✨</span>
+          <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_#9b4dff] animate-pulse">
+            Welcome to Project PLUR
+          </h1>
+          <span className="text-4xl sm:text-5xl text-edmPurple drop-shadow-lg">✨</span>
+        </div>
+      </div>
+
 
       <PostForm addPost={addPost} />
 
