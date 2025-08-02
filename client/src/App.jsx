@@ -3,8 +3,6 @@ import PostForm from "./components/PostForm";
 import Post from "./components/Post";
 import { supabase } from "./supabase";
 
-const storedUsername = localStorage.getItem("plur-username") || "Anonymous";
-
 export default function App() {
   const [posts, setPosts] = useState([]);
 
@@ -54,6 +52,38 @@ export default function App() {
     }
   };
 
+  // Fetch comments for a specific post
+const fetchComments = async (postId) => {
+  const { data, error } = await supabase
+    .from('comments')
+    .select('*')
+    .eq('post_id', postId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching comments:', error);
+    return [];
+  }
+  return data;
+};
+
+// Add a new comment
+const addComment = async (postId, content) => {
+  const username = localStorage.getItem('plur-username') || 'Anonymous';
+  const { error } = await supabase.from('comments').insert([
+    {
+      post_id: postId,
+      author: username,
+      content,
+    },
+  ]);
+
+  if (error) {
+    console.error('Error adding comment:', error);
+  }
+};
+
+
   return (
     <div className="min-h-screen bg-darkBg font-sans p-8 max-w-3xl mx-auto">
       <h1 className="text-5xl font-extrabold text-edmPurple drop-shadow-lg text-center">
@@ -64,7 +94,7 @@ export default function App() {
 
       <div className="mt-8 space-y-6">
         {posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post.id} post={post} addcomment={addComment} fetchComments={fetchComments} />
         ))}
       </div>
     </div>
