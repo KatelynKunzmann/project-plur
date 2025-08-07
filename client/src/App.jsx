@@ -30,8 +30,8 @@ export default function App() {
 
     fetchPosts();
   }, []);
-  
- const addPost = async ({ content, image }) => {
+
+  const addPost = async ({ content, image }) => {
     const username = localStorage.getItem("plur-username") || "Anonymous";
 
     const { data, error } = await supabase
@@ -48,63 +48,77 @@ export default function App() {
         username: data.author,
         content: data.content,
         createdAt: data.created_at,
-        imageUrl: data.image_url,
+        imageUrl: data.image_url
       };
       setPosts((prev) => [newPost, ...prev]);
     }
   };
 
-
-
   // Fetch comments for a specific post
-const fetchComments = async (postId) => {
-  const { data, error } = await supabase
-    .from('comments')
-    .select('*')
-    .eq('post_id', postId)
-    .order('created_at', { ascending: true });
+  const fetchComments = async (postId) => {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .eq("post_id", postId)
+      .order("created_at", { ascending: true });
 
-  if (error) {
-    console.error('Error fetching comments:', error);
-    return [];
-  }
-  return data;
-};
+    if (error) {
+      console.error("Error fetching comments:", error);
+      return [];
+    }
+    return data;
+  };
 
-// Add a new comment
-const addComment = async (postId, content) => {
-  const username = localStorage.getItem('plur-username') || 'Anonymous';
-  const { error } = await supabase.from('comments').insert([
-    {
-      post_id: postId,
-      author: username,
-      content,
-    },
-  ]);
+  // Add a new comment
+  const addComment = async (postId, content) => {
+    const username = localStorage.getItem("plur-username") || "Anonymous";
+    const { error } = await supabase.from("comments").insert([
+      {
+        post_id: postId,
+        author: username,
+        content
+      }
+    ]);
 
-  if (error) {
-    console.error('Error adding comment:', error);
-  }
-};
+    if (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-darkBg font-sans px-4 max-w-4xl mx-auto">
       <div className="flex flex-col items-center text-center space-y-2 mb-6">
         <div className="flex items-center gap-3">
-          <span className="text-4xl sm:text-5xl text-edmPurple drop-shadow-lg">✨</span>
+          <span className="text-4xl sm:text-5xl text-edmPurple drop-shadow-lg">
+            ✨
+          </span>
           <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-[0_0_10px_#9b4dff] animate-pulse">
             Welcome to Project PLUR
           </h1>
-          <span className="text-4xl sm:text-5xl text-edmPurple drop-shadow-lg">✨</span>
+          <span className="text-4xl sm:text-5xl text-edmPurple drop-shadow-lg">
+            ✨
+          </span>
         </div>
+        <p className="mt-4 max-w-2xl text-base text-white">
+          Hey there! I’m Katelyn! If you received kandi from me or one of my
+          friends, welcome! I built this (very beta) little site so you can
+          share your experiences at the festival. 💫 Tell us how you got your
+          kandi, post a pic of it, share a side quest you completed, or just
+          vibe and say whatever’s on your mind. Enjoy and stay safe out there!
+          💖
+        </p>
       </div>
-
 
       <PostForm addPost={addPost} />
 
       <div className="mt-8 space-y-6">
         {posts.map((post) => (
-          <Post key={post.id} post={post} addcomment={addComment} fetchComments={fetchComments} />
+          <Post
+            key={post.id}
+            post={post}
+            addcomment={addComment}
+            fetchComments={fetchComments}
+          />
         ))}
       </div>
     </div>
