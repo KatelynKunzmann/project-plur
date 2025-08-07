@@ -25,6 +25,12 @@ export default function PostForm({ addPost }) {
       localStorage.setItem("plur-username", username);
       setIsLocked(true);
     }
+    if (input.trim().length === 0) return; // Prevent empty posts
+    if (input.length > 2000) {
+      alert("Post is too long! Please keep it under 2000 characters.");
+      return;
+    }
+
     addPost({ content: input, image: image });
     setInput("");
     setImage(null);
@@ -64,11 +70,20 @@ export default function PostForm({ addPost }) {
       </div>
       <textarea
         rows="3"
+        maxLength={2000}
         placeholder="What's your Kandi story? Or your sidequest story? Or maybe you just wanna chat :)"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         className="w-full p-2 mt-3 rounded-md bg-[#2e2e48] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-neonGreen"
       />
+      <div
+        className={`text-xs text-right ${
+          input.length > 1950 ? "text-red-400" : "text-gray-400"
+        }`}
+      >
+        {input.length}/2000
+      </div>
+
       <ImageUploader setImage={setImage} />
       <button
         type="submit"

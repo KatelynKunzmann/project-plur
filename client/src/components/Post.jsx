@@ -37,6 +37,13 @@ export default function Post({ post }) {
 
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
+
+    if (newComment.trim().length === 0) return; // Prevent empty comments
+    if (newComment.length > 1000) {
+      alert("Comment is too long! Please keep it under 1000 characters.");
+      return;
+    }
+
     const username = localStorage.getItem("plur-username") || "Anonymous";
 
     const { error } = await supabase.from("comments").insert([
@@ -97,11 +104,20 @@ export default function Post({ post }) {
           <form onSubmit={handleCommentSubmit} className="flex flex-col gap-2">
             <textarea
               rows="2"
+              maxLength={1000}
               placeholder="Write a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               className="w-full p-2 rounded-md bg-[#1f1f39] text-white placeholder-neonYellow focus:outline-none focus:ring-2 focus:ring-neonGreen"
             />
+            <div
+              className={`text-xs text-right ${
+                newComment.length > 950 ? "text-red-400" : "text-gray-400"
+              }`}
+            >
+              {newComment.length}/1000
+            </div>
+
             <ImageUploader setImage={setCommentImage} />
             <button
               type="submit"
