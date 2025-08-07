@@ -3,13 +3,13 @@ import { supabase } from "../supabase";
 import { formatDistanceToNow } from "date-fns";
 
 export default function Post({ post }) {
-const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
-  year: "numeric",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-});
+  const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric"
+  });
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
@@ -41,8 +41,8 @@ const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
       {
         post_id: post.id,
         author: username,
-        content: newComment,
-      },
+        content: newComment
+      }
     ]);
 
     if (error) {
@@ -63,7 +63,9 @@ const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
   return (
     <div className="bg-[#2e2e48] p-4 rounded shadow text-white">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-1">
-        <p className="text-neonYellow font-bold text-base">{post.username || "Anonymous"}</p>
+        <p className="text-neonYellow font-bold text-base">
+          {post.username || "Anonymous"}
+        </p>
         <span className="text-xs text-gray-400">{formattedDate}</span>
       </div>
 
@@ -106,10 +108,6 @@ const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
 
           <div className="mt-4 space-y-2">
             {displayedComments.map((comment) => {
-              const relativeTime = formatDistanceToNow(new Date(comment.created_at), {
-                addSuffix: true,
-              });
-
               return (
                 <div
                   key={comment.id}
@@ -120,12 +118,13 @@ const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
                       {comment.author || "Anonymous"}
                     </p>
                     <span className="text-xs text-gray-400 sm:text-right sm:ml-2">
-                      {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+                      {formatDistanceToNow(new Date(comment.created_at), {
+                        addSuffix: true
+                      })}
                     </span>
                   </div>
                   <p>{comment.content}</p>
                 </div>
-
               );
             })}
             {comments.length > 5 && (

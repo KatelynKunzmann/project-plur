@@ -2,22 +2,20 @@ import React, { useState, useEffect } from "react";
 import getRandomUsername from "../utils/username";
 import ImageUploader from "./ImageUploader";
 
-
 export default function PostForm({ addPost }) {
   const [username, setUsername] = useState(getRandomUsername());
   const [input, setInput] = useState("");
   const [isLocked, setIsLocked] = useState(false);
   const [image, setImage] = useState(null);
 
-useEffect(() => {
-  const locked = !!localStorage.getItem("plur-username");
-  setIsLocked(locked);
-}, []);
-
+  useEffect(() => {
+    const locked = !!localStorage.getItem("plur-username");
+    setIsLocked(locked);
+  }, []);
 
   const handleRegenerate = () => {
     if (isLocked) return;
-    const newName = getRandomUsername(true); // request a fresh name
+    const newName = getRandomUsername(true);
     setUsername(newName);
   };
 
@@ -35,35 +33,42 @@ useEffect(() => {
   return (
     <form onSubmit={handleSubmit} className="mt-6 flex flex-col">
       <div className="w-full flex flex-col sm:flex-row gap-2 items-stretch">
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col">
           <input
             type="text"
             value={username}
-            readOnly
-            disabled
+            onChange={(e) => setUsername(e.target.value)}
+            disabled={isLocked}
             className="w-full p-2 rounded-md bg-[#2e2e48] text-white placeholder-neonYellow 
-                      focus:outline-none focus:ring-2 focus:ring-neonGreen 
-                      pointer-events-none select-none"
+                focus:outline-none focus:ring-2 focus:ring-neonGreen 
+                disabled:opacity-70"
           />
-        </div>
-        <ImageUploader image={image} setImage={setImage} />
           {!isLocked && (
-          <button
-            type="button"
-            onClick={handleRegenerate}
-            className="text-sm font-semibold text-neonYellow border border-neonYellow rounded px-3 py-1 transition hover:bg-neonYellow hover:text-darkBg hover:shadow-[0_0_10px_#ccff33] hover:scale-105 active:scale-95"
-          >
-            🔁 Randomize Name
-          </button>
-        )}
-      </div>
+            <p className="text-xs text-gray-400 mt-1">
+              ⚠️ This username will be locked in after your first post.
+            </p>
+          )}
+        </div>
 
+        <div className="flex flex-col gap-1">
+          {!isLocked && (
+            <button
+              type="button"
+              onClick={handleRegenerate}
+              className="text-sm font-semibold text-neonYellow border border-neonYellow rounded px-3 py-1 transition hover:bg-neonYellow hover:text-darkBg hover:shadow-[0_0_10px_#ccff33] hover:scale-105 active:scale-95"
+            >
+              🔁 Randomize Name
+            </button>
+          )}
+          <ImageUploader image={image} setImage={setImage} />
+        </div>
+      </div>
       <textarea
         rows="3"
-        placeholder="What's your Kandi story?"
+        placeholder="What's your Kandi story? Or your sidequest story? Or maybe you just wanna chat :)"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="w-full p-2 mt-3 rounded-md bg-[#2e2e48] text-white placeholder-neonYellow focus:outline-none focus:ring-2 focus:ring-neonGreen"
+        className="w-full p-2 mt-3 rounded-md bg-[#2e2e48] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-neonGreen"
       />
 
       <button

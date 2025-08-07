@@ -16,7 +16,6 @@ export default function App() {
       if (error) {
         console.error("Error fetching posts:", error);
       } else {
-        // Normalize data shape to what our components expect
         const formatted = data.map((post) => ({
           id: post.id,
           username: post.author,
@@ -54,7 +53,6 @@ export default function App() {
     }
   };
 
-  // Fetch comments for a specific post
   const fetchComments = async (postId) => {
     const { data, error } = await supabase
       .from("comments")
@@ -69,7 +67,6 @@ export default function App() {
     return data;
   };
 
-  // Add a new comment
   const addComment = async (postId, content) => {
     const username = localStorage.getItem("plur-username") || "Anonymous";
     const { error } = await supabase.from("comments").insert([
