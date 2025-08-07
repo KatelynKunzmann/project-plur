@@ -14,7 +14,7 @@ export default function Post({ post }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
-  const [expanded, setExpanded] = useState(false);
+  const [setExpanded] = useState(false);
   const [commentImage, setCommentImage] = useState(null);
 
   useEffect(() => {
@@ -69,7 +69,7 @@ export default function Post({ post }) {
     }
   };
 
-  const displayedComments = expanded ? comments : comments.slice(0, 5);
+  const displayedComments = showComments ? comments : [];
 
   return (
     <div className="bg-[#2e2e48] p-4 rounded shadow text-white">
@@ -155,14 +155,14 @@ export default function Post({ post }) {
                 </div>
               );
             })}
-            {comments.length > 5 && (
-              <button
-                onClick={() => setExpanded((prev) => !prev)}
-                className="mt-2 text-sm text-edmPurple font-medium border border-edmPurple px-2 py-1 rounded hover:bg-edmPurple hover:text-darkBg"
-              >
-                {expanded ? "⬆ Hide comments" : "⬇ Show more comments"}
-              </button>
-            )}
+            <button
+              onClick={() => setShowComments((prev) => !prev)}
+              className="mt-2 text-sm text-edmPurple font-medium border border-edmPurple px-2 py-1 rounded hover:bg-edmPurple hover:text-darkBg"
+            >
+              {showComments
+                ? "⬆ Hide comments"
+                : `⬇ Show all comments (${comments.length})`}
+            </button>
           </div>
         </div>
       )}
