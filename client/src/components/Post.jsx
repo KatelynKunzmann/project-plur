@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../supabase";
 import { formatDistanceToNow } from "date-fns";
+import ImageUploader from "./ImageUploader";
 
 export default function Post({ post }) {
   const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
@@ -14,6 +15,7 @@ export default function Post({ post }) {
   const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [commentImage, setCommentImage] = useState(null);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -41,7 +43,8 @@ export default function Post({ post }) {
       {
         post_id: post.id,
         author: username,
-        content: newComment
+        content: newComment,
+        image_url: commentImage
       }
     ]);
 
@@ -49,6 +52,7 @@ export default function Post({ post }) {
       console.error("Error posting comment:", error);
     } else {
       setNewComment("");
+      setCommentImage(null);
       const { data } = await supabase
         .from("comments")
         .select("*")
@@ -98,6 +102,7 @@ export default function Post({ post }) {
               onChange={(e) => setNewComment(e.target.value)}
               className="w-full p-2 rounded-md bg-[#1f1f39] text-white placeholder-neonYellow focus:outline-none focus:ring-2 focus:ring-neonGreen"
             />
+            <ImageUploader setImage={setCommentImage} />
             <button
               type="submit"
               className="self-end bg-darkBg text-neonYellow font-bold py-1 px-4 rounded border border-neonYellow transition hover:bg-[#9b4dff] hover:text-neonGreen hover:shadow-md"
@@ -124,6 +129,13 @@ export default function Post({ post }) {
                     </span>
                   </div>
                   <p>{comment.content}</p>
+                  {comment.image_url && (
+                    <img
+                      src={comment.image_url}
+                      alt="Comment attachment"
+                      className="mt-2 max-w-full rounded border border-neonGreen"
+                    />
+                  )}
                 </div>
               );
             })}

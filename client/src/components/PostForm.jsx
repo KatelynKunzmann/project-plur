@@ -60,7 +60,6 @@ export default function PostForm({ addPost }) {
               🔁 Randomize Name
             </button>
           )}
-          <ImageUploader image={image} setImage={setImage} />
         </div>
       </div>
       <textarea
@@ -70,7 +69,7 @@ export default function PostForm({ addPost }) {
         onChange={(e) => setInput(e.target.value)}
         className="w-full p-2 mt-3 rounded-md bg-[#2e2e48] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-neonGreen"
       />
-
+      <ImageUploader setImage={setImage} />
       <button
         type="submit"
         className="mt-3 bg-darkBg text-neonYellow font-bold py-2 px-4 rounded border border-neonYellow transition duration-300 ease-in-out
