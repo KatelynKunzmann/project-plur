@@ -68,6 +68,13 @@ const formattedDate = new Date(post.createdAt).toLocaleString(undefined, {
       </div>
 
       <p className="mb-3">{post.content}</p>
+      {post.imageUrl && (
+        <img
+          src={post.imageUrl}
+          alt="Post attachment"
+          className="mt-3 max-w-full rounded-lg border border-neonGreen"
+        />
+      )}
 
       <button
         onClick={() => {

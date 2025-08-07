@@ -22,6 +22,7 @@ export default function App() {
           username: post.author,
           content: post.content,
           createdAt: post.created_at,
+          imageUrl: post.image_url
         }));
         setPosts(formatted);
       }
@@ -30,12 +31,12 @@ export default function App() {
     fetchPosts();
   }, []);
   
-  const addPost = async ({ content }) => {
+ const addPost = async ({ content, image }) => {
     const username = localStorage.getItem("plur-username") || "Anonymous";
 
     const { data, error } = await supabase
       .from("posts")
-      .insert([{ author: username, content }])
+      .insert([{ author: username, content, image_url: image || null }])
       .select()
       .single();
 
@@ -47,10 +48,13 @@ export default function App() {
         username: data.author,
         content: data.content,
         createdAt: data.created_at,
+        imageUrl: data.image_url,
       };
       setPosts((prev) => [newPost, ...prev]);
     }
   };
+
+
 
   // Fetch comments for a specific post
 const fetchComments = async (postId) => {

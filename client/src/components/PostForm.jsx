@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import getRandomUsername from "../utils/username";
+import ImageUploader from "./ImageUploader";
+
 
 export default function PostForm({ addPost }) {
   const [username, setUsername] = useState(getRandomUsername());
   const [input, setInput] = useState("");
   const [isLocked, setIsLocked] = useState(false);
+  const [image, setImage] = useState(null);
 
 useEffect(() => {
   const locked = !!localStorage.getItem("plur-username");
@@ -24,8 +27,9 @@ useEffect(() => {
       localStorage.setItem("plur-username", username);
       setIsLocked(true);
     }
-    addPost({ content: input });
+    addPost({ content: input, image: image });
     setInput("");
+    setImage(null);
   };
 
   return (
@@ -42,6 +46,7 @@ useEffect(() => {
                       pointer-events-none select-none"
           />
         </div>
+        <ImageUploader image={image} setImage={setImage} />
           {!isLocked && (
           <button
             type="button"
